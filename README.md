@@ -11,7 +11,6 @@ This bot detects specific function calls made by a known `deployer` address. It 
 - Any other EVM-compatible chains
 
 ## Alerts
-
 ### FORTA-CREATE
 - **Description**: Fired when a transaction contains a Create Agent function call by the deployer address.
 - **Severity**: Low.

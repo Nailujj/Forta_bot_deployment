@@ -50,7 +50,7 @@ describe("handleTransaction", () => {
 
   it("should not detect transaction of a bot deployment with the wrong function abi", async () => {
     const newProxyInterface = new ethers.utils.Interface([
-      "function fooAgent(uint256 agentId,address owner,string metadata,uint256[] chainIds)"
+      "function fooAgent(uint256 agentId,address owner,string metadata,uint256[] chainIds)",
     ]);
     const txEvent = new TestTransactionEvent()
       .setFrom(NETHERMIND_DEPLOYER_ADDRESS)
@@ -141,7 +141,6 @@ describe("handleTransaction", () => {
     ]);
   });
 
-
   it("should detect Create Agent function call in traces", async () => {
     const txEvent = new TestTransactionEvent()
       .setFrom(DEPLOYER_ADDRESS)
@@ -151,7 +150,7 @@ describe("handleTransaction", () => {
         to: AGENT_REGISTRY_ADDRESS,
         from: NETHERMIND_DEPLOYER_ADDRESS,
         arguments: [1, createAddress("0x1"), "metadata", [1, 2]],
-      })
+      });
 
     const findings = await handleTransaction(txEvent);
     expect(findings).toEqual([
@@ -166,13 +165,11 @@ describe("handleTransaction", () => {
           from: NETHERMIND_DEPLOYER_ADDRESS.toLocaleLowerCase(),
           to: AGENT_REGISTRY_ADDRESS.toLocaleLowerCase(),
           txHash: "0x",
-         },
+        },
       }),
     ]);
   });
 
-
-    
   it("should detect Update Agent function call in traces", async () => {
     const txEvent = new TestTransactionEvent()
       .setFrom(DEPLOYER_ADDRESS)
@@ -182,7 +179,7 @@ describe("handleTransaction", () => {
         to: AGENT_REGISTRY_ADDRESS,
         from: NETHERMIND_DEPLOYER_ADDRESS,
         arguments: [1, "metadata", [1, 2]],
-      })
+      });
 
     const findings = await handleTransaction(txEvent);
     expect(findings).toEqual([
@@ -197,12 +194,10 @@ describe("handleTransaction", () => {
           from: NETHERMIND_DEPLOYER_ADDRESS.toLocaleLowerCase(),
           to: AGENT_REGISTRY_ADDRESS.toLocaleLowerCase(),
           txHash: "0x",
-          },
+        },
       }),
     ]);
   });
-
-
 
   it("should detect Disable Agent function call in traces", async () => {
     const txEvent = new TestTransactionEvent()
@@ -213,7 +208,7 @@ describe("handleTransaction", () => {
         to: AGENT_REGISTRY_ADDRESS,
         from: NETHERMIND_DEPLOYER_ADDRESS,
         arguments: [1, 1],
-      })
+      });
 
     const findings = await handleTransaction(txEvent);
     expect(findings).toEqual([
@@ -228,11 +223,10 @@ describe("handleTransaction", () => {
           from: NETHERMIND_DEPLOYER_ADDRESS.toLocaleLowerCase(),
           to: AGENT_REGISTRY_ADDRESS.toLocaleLowerCase(),
           txHash: "0x",
-          },
+        },
       }),
     ]);
   });
-
 
   it("should detect multiple Create Agent function calls in traces", async () => {
     const txEvent = new TestTransactionEvent()
@@ -249,7 +243,7 @@ describe("handleTransaction", () => {
         to: AGENT_REGISTRY_ADDRESS,
         from: NETHERMIND_DEPLOYER_ADDRESS,
         arguments: [1, createAddress("0x1"), "metadata", [1, 2]],
-      })
+      });
 
     const findings = await handleTransaction(txEvent);
     expect(findings).toEqual([
@@ -264,7 +258,7 @@ describe("handleTransaction", () => {
           from: NETHERMIND_DEPLOYER_ADDRESS.toLocaleLowerCase(),
           to: AGENT_REGISTRY_ADDRESS.toLocaleLowerCase(),
           txHash: "0x",
-         },
+        },
       }),
       Finding.fromObject({
         name: "CREATE Agent Detected",
@@ -277,11 +271,10 @@ describe("handleTransaction", () => {
           from: NETHERMIND_DEPLOYER_ADDRESS.toLocaleLowerCase(),
           to: AGENT_REGISTRY_ADDRESS.toLocaleLowerCase(),
           txHash: "0x",
-         },
+        },
       }),
     ]);
   });
-
 
   it("should detect multiple Update Agent function calls in traces", async () => {
     const txEvent = new TestTransactionEvent()
@@ -298,7 +291,7 @@ describe("handleTransaction", () => {
         to: AGENT_REGISTRY_ADDRESS,
         from: NETHERMIND_DEPLOYER_ADDRESS,
         arguments: [1, "metadata", [1, 2]],
-      })
+      });
 
     const findings = await handleTransaction(txEvent);
     expect(findings).toEqual([
@@ -313,7 +306,7 @@ describe("handleTransaction", () => {
           from: NETHERMIND_DEPLOYER_ADDRESS.toLocaleLowerCase(),
           to: AGENT_REGISTRY_ADDRESS.toLocaleLowerCase(),
           txHash: "0x",
-          },
+        },
       }),
       Finding.fromObject({
         name: "UPDATE Agent Detected",
@@ -326,11 +319,10 @@ describe("handleTransaction", () => {
           from: NETHERMIND_DEPLOYER_ADDRESS.toLocaleLowerCase(),
           to: AGENT_REGISTRY_ADDRESS.toLocaleLowerCase(),
           txHash: "0x",
-          },
+        },
       }),
     ]);
   });
-
 
   it("should detect mutliple Disable Agent function calls in traces", async () => {
     const txEvent = new TestTransactionEvent()
@@ -347,7 +339,7 @@ describe("handleTransaction", () => {
         to: AGENT_REGISTRY_ADDRESS,
         from: NETHERMIND_DEPLOYER_ADDRESS,
         arguments: [1, 1],
-      })
+      });
 
     const findings = await handleTransaction(txEvent);
     expect(findings).toEqual([
@@ -362,7 +354,7 @@ describe("handleTransaction", () => {
           from: NETHERMIND_DEPLOYER_ADDRESS.toLocaleLowerCase(),
           to: AGENT_REGISTRY_ADDRESS.toLocaleLowerCase(),
           txHash: "0x",
-          },
+        },
       }),
       Finding.fromObject({
         name: "DISABLE Agent Detected",
@@ -375,11 +367,8 @@ describe("handleTransaction", () => {
           from: NETHERMIND_DEPLOYER_ADDRESS.toLocaleLowerCase(),
           to: AGENT_REGISTRY_ADDRESS.toLocaleLowerCase(),
           txHash: "0x",
-          },
+        },
       }),
     ]);
   });
-
-
-  
 });

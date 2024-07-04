@@ -1,16 +1,14 @@
 {
-  "name": "forta-bot-deployment-detection",
-  "displayName": "Forta Bot deployment detection",
+  "name": "nethermind-creation-update-disable-detection-bot",
+  "displayName": "Nethermind Creation, Update, Disable Detection Bot",
   "version": "0.0.1",
-  "description": "Bot that detects bot deployment from specific addresses",
-  "longDescription": "This bot detects specific function calls made by a known deployer address. It monitors transactions for Create Agent, Update Agent, and Disable Agent function calls.",
-  "repository": "https://github.com/forta-network/forta-bot-sdk/tree/master/starter-project",
+  "description": "Bot that detects Nethermind's bot interactions to the Forta Agent Registry on Polygon.",
+  "longDescription": "This Forta bot monitors specific function calls made by the known Nethermind `Deployer address`. It watches transactions for `Create Agent`, `Update Agent`, and `Disable Agent` function calls directed to the `Forta Agent Registry` on Polygon.",
+  "repository": "https://github.com/Nailujj/Forta_bot_deployment",
   "licenseUrl": "https://github.com/forta-network/forta-bot-sdk/blob/master/starter-project/LICENSE.md",
   "promoUrl": "https://forta.org",
   "main": "dist/index.js",
-  "chainIds": [
-    137
-  ],
+  "chainIds": [137],
   "scripts": {
     "build": "tsc",
     "start": "npm run start:dev",
@@ -34,8 +32,7 @@
     "format": "prettier --write \"src/**/*.ts\""
   },
   "dependencies": {
-    "forta-agent": "^0.1.48",
-    "forta-agent-tools": "^3.2.12"
+    "forta-agent": "^0.1.48"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
@@ -46,6 +43,7 @@
     "nodemon": "^2.0.8",
     "prettier": "^3.3.2",
     "ts-jest": "^29.1.1",
-    "typescript": "^4.3.4"
+    "typescript": "^4.3.4",
+    "forta-agent-tools": "^3.2.12"
   }
 }

@@ -1,88 +1,60 @@
-import { Finding, HandleTransaction, TransactionEvent, FindingSeverity, FindingType } from "forta-agent";
+import { Finding, HandleTransaction, TransactionEvent} from "forta-agent";
+import { createFinding } from "./findings";
 import {
-  DEPLOYER_ADDRESS,
-  DEPLOYMENT_TO_ADDRESS,
-  CREATE_AGENT_SIG,
-  UPDATE_AGENT_SIG,
-  DISABLE_AGENT_SIG,
+  NETHERMIND_DEPLOYER_ADDRESS as DEPLOYER_ADDRESS,
+  AGENT_REGISTRY_ADDRESS,
+  CREATE_AGENT_ABI,
+  UPDATE_AGENT_ABI,
+  DISABLE_AGENT_ABI
 } from "./constants";
-
-const createFinding = (
-  name: string,
-  description: string,
-  alertId: string,
-  txEvent: TransactionEvent,
-  data: string
-): Finding => {
-  return Finding.fromObject({
-    name,
-    description,
-    alertId,
-    severity: FindingSeverity.Low,
-    type: FindingType.Info,
-    metadata: {
-      txHash: txEvent.hash,
-      from: txEvent.from,
-      to: txEvent.to?.toLowerCase() || "",
-      data,
-    },
-  });
-};
 
 const provideHandleTransaction = (
   deployerAddress: string,
-  deploymentToAddress: string,
-  createAgentSig: string,
-  updateAgentSig: string,
-  disableAgentSig: string
+  agentRegistryAddress: string,
+  createAgentAbi: string,
+  updateAgentAbi: string,
+  disableAgentAbi: string
 ): HandleTransaction => {
   return async (txEvent: TransactionEvent) => {
     const findings: Finding[] = [];
 
-    if (
-      txEvent.from.toLowerCase() === deployerAddress.toLowerCase() &&
-      txEvent.to &&
-      txEvent.to.toLowerCase() === deploymentToAddress.toLowerCase()
-    ) {
-      const input = txEvent.transaction.data;
 
-      if (input.startsWith(createAgentSig)) {
-        findings.push(
-          createFinding(
-            "Create Agent Detected",
-            `Create Agent function called by ${deployerAddress}`,
-            "FORTA-CREATE",
-            txEvent,
-            input
-          )
-        );
+    if(txEvent.from !== deployerAddress.toLowerCase()) return findings;
+
+
+    // filter by relevant events
+    const agentDeploymentEvents = txEvent.filterFunction([createAgentAbi, updateAgentAbi, disableAgentAbi], agentRegistryAddress);
+
+
+
+    // if no bot deployment events are found
+    if (!agentDeploymentEvents.length) return findings;
+
+
+    agentDeploymentEvents.forEach((event) => {
+      if (event.signature.includes("create")) {
+        findings.push(createFinding(
+          "CREATE Agent Detected","CREATE function called by Nethermind's deployer address", 
+          "NETHERMIND-1",
+          txEvent, 
+          txEvent.transaction.data
+        ));
+      } else if (event.signature.includes("update")) {
+        findings.push(createFinding(
+          "UPDATE Agent Detected","UPDATE function called by Nethermind's deployer address", 
+          "NETHERMIND-2",
+          txEvent, 
+          txEvent.transaction.data
+        ));
+      } else if (event.signature.includes("disable")) {
+        findings.push(createFinding(
+          "DISABLE Agent Detected","DISABLE function called by Nethermind's deployer address", 
+          "NETHERMIND-3",
+          txEvent, 
+          txEvent.transaction.data
+        ));
       }
-
-      if (input.startsWith(updateAgentSig)) {
-        findings.push(
-          createFinding(
-            "Update Agent Detected",
-            `Update Agent function called by ${deployerAddress}`,
-            "FORTA-UPDATE",
-            txEvent,
-            input
-          )
-        );
-      }
-
-      if (input.startsWith(disableAgentSig)) {
-        findings.push(
-          createFinding(
-            "Disable Agent Detected",
-            `Disable Agent function called by ${deployerAddress}`,
-            "FORTA-DISABLE",
-            txEvent,
-            input
-          )
-        );
-      }
-    }
-
+    });
     return findings;
   };
 };
@@ -90,9 +62,9 @@ const provideHandleTransaction = (
 export default {
   handleTransaction: provideHandleTransaction(
     DEPLOYER_ADDRESS,
-    DEPLOYMENT_TO_ADDRESS,
-    CREATE_AGENT_SIG,
-    UPDATE_AGENT_SIG,
-    DISABLE_AGENT_SIG
+    AGENT_REGISTRY_ADDRESS,
+    CREATE_AGENT_ABI,
+    UPDATE_AGENT_ABI,
+    DISABLE_AGENT_ABI
   ),
 };

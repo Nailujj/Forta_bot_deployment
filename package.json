@@ -7,7 +7,6 @@
   "repository": "https://github.com/Nailujj/Forta_bot_deployment",
   "licenseUrl": "https://github.com/forta-network/forta-bot-sdk/blob/master/starter-project/LICENSE.md",
   "promoUrl": "https://forta.org",
-  "main": "dist/index.js",
   "chainIds": [137],
   "scripts": {
     "build": "tsc",

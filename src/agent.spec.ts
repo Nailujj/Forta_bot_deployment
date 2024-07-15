@@ -13,7 +13,7 @@ import {
   DISABLE_AGENT_ABI,
 } from "./constants";
 
-export const iface = new ethers.utils.Interface([
+export const testIFace = new ethers.utils.Interface([
   CREATE_AGENT_ABI,
   UPDATE_AGENT_ABI,
   DISABLE_AGENT_ABI
@@ -22,12 +22,12 @@ export const iface = new ethers.utils.Interface([
 const mockAgentId = 1;
 const mockChainIds = [1, 2];
 const mockMetadata = "metadata";
-const testAddress1 = createAddress("0x0000000000000000000000000000000000000001");
-const testAddress2 = createAddress("0x0000000000000000000000000000000000000002");
-const testAddress3 = createAddress("0x0000000000000000000000000000000000000003");
-const testAddress4 = createAddress("0x0000000000000000000000000000000000000004");
-const testAddress5 = createAddress("0x0000000000000000000000000000000000000005");
-const testAddress6 = createAddress("0x0000000000000000000000000000000000000006");
+const testAddress1 = createAddress("0x1");
+const testAddress2 = createAddress("0x2");
+const testAddress3 = createAddress("0x3");
+const testAddress4 = createAddress("0x4");
+const testAddress5 = createAddress("0x5");
+const testAddress6 = createAddress("0x6");
 
 describe("handleTransaction", () => {
   it("should not detect unrelated transactions", async () => {
@@ -45,7 +45,7 @@ describe("handleTransaction", () => {
     const txEvent = new TestTransactionEvent()
       .setFrom(testAddress3)
       .setTo(createAddress(AGENT_REGISTRY_ADDRESS))
-      .setData(iface.encodeFunctionData("createAgent", [mockAgentId, testAddress4, mockMetadata, mockChainIds]))
+      .setData(testIFace.encodeFunctionData("createAgent", [mockAgentId, testAddress4, mockMetadata, mockChainIds]))
       .setHash(createTransactionHash({ to: createAddress(AGENT_REGISTRY_ADDRESS) }));
 
     const findings = await handleTransaction(txEvent);
@@ -56,7 +56,7 @@ describe("handleTransaction", () => {
     const txEvent = new TestTransactionEvent()
       .setFrom(createAddress(NETHERMIND_DEPLOYER_ADDRESS))
       .setTo(testAddress5)
-      .setData(iface.encodeFunctionData("createAgent", [mockAgentId, testAddress4, mockMetadata, mockChainIds]))
+      .setData(testIFace.encodeFunctionData("createAgent", [mockAgentId, testAddress4, mockMetadata, mockChainIds]))
       .setHash(createTransactionHash({ to: testAddress5 }));
 
     const findings = await handleTransaction(txEvent);
@@ -85,7 +85,7 @@ describe("handleTransaction", () => {
     const txEvent = new TestTransactionEvent()
       .setFrom(createAddress(NETHERMIND_DEPLOYER_ADDRESS))
       .setTo(createAddress(AGENT_REGISTRY_ADDRESS))
-      .setData(iface.encodeFunctionData("createAgent", [mockAgentId, testAddress4, mockMetadata, mockChainIds]))
+      .setData(testIFace.encodeFunctionData("createAgent", [mockAgentId, testAddress4, mockMetadata, mockChainIds]))
       .setHash(createTransactionHash({ to: createAddress(AGENT_REGISTRY_ADDRESS) }));
 
     const findings = await handleTransaction(txEvent);
@@ -113,7 +113,7 @@ describe("handleTransaction", () => {
     const txEvent = new TestTransactionEvent()
       .setFrom(createAddress(NETHERMIND_DEPLOYER_ADDRESS))
       .setTo(createAddress(AGENT_REGISTRY_ADDRESS))
-      .setData(iface.encodeFunctionData("updateAgent", [mockAgentId, mockMetadata, mockChainIds]))
+      .setData(testIFace.encodeFunctionData("updateAgent", [mockAgentId, mockMetadata, mockChainIds]))
       .setHash(createTransactionHash({ to: createAddress(AGENT_REGISTRY_ADDRESS) }));
 
     const findings = await handleTransaction(txEvent);
@@ -136,11 +136,11 @@ describe("handleTransaction", () => {
     ]);
   });
 
-  it("should detect Disable Agent function call", async () => {
+  it("should detect Disabl e Agent function call", async () => {
     const txEvent = new TestTransactionEvent()
       .setFrom(createAddress(NETHERMIND_DEPLOYER_ADDRESS))
       .setTo(createAddress(AGENT_REGISTRY_ADDRESS))
-      .setData(iface.encodeFunctionData("disableAgent", [mockAgentId, 1]))
+      .setData(testIFace.encodeFunctionData("disableAgent", [mockAgentId, 1]))
       .setHash(createTransactionHash({ to: createAddress(AGENT_REGISTRY_ADDRESS) }));
 
     const findings = await handleTransaction(txEvent);
@@ -167,7 +167,7 @@ describe("handleTransaction", () => {
       .setFrom(createAddress(NETHERMIND_DEPLOYER_ADDRESS))
       .setTo(createAddress(AGENT_REGISTRY_ADDRESS))
       .addTraces({
-        function: iface.getFunction("createAgent"),
+        function: testIFace.getFunction("createAgent"),
         to: createAddress(AGENT_REGISTRY_ADDRESS),
         from: createAddress(NETHERMIND_DEPLOYER_ADDRESS),
         arguments: [mockAgentId, testAddress6, mockMetadata, mockChainIds],
@@ -199,7 +199,7 @@ describe("handleTransaction", () => {
       .setFrom(createAddress(NETHERMIND_DEPLOYER_ADDRESS))
       .setTo(createAddress(AGENT_REGISTRY_ADDRESS))
       .addTraces({
-        function: iface.getFunction("updateAgent"),
+        function: testIFace.getFunction("updateAgent"),
         to: createAddress(AGENT_REGISTRY_ADDRESS),
         from: createAddress(NETHERMIND_DEPLOYER_ADDRESS),
         arguments: [mockAgentId, mockMetadata, mockChainIds],
@@ -230,7 +230,7 @@ describe("handleTransaction", () => {
       .setFrom(createAddress(NETHERMIND_DEPLOYER_ADDRESS))
       .setTo(createAddress(AGENT_REGISTRY_ADDRESS))
       .addTraces({
-        function: iface.getFunction("disableAgent"),
+        function: testIFace.getFunction("disableAgent"),
         to: createAddress(AGENT_REGISTRY_ADDRESS),
         from: createAddress(NETHERMIND_DEPLOYER_ADDRESS),
         arguments: [mockAgentId, 1],
@@ -260,13 +260,13 @@ describe("handleTransaction", () => {
       .setFrom(createAddress(NETHERMIND_DEPLOYER_ADDRESS))
       .setTo(createAddress(AGENT_REGISTRY_ADDRESS))
       .addTraces({
-        function: iface.getFunction("createAgent"),
+        function: testIFace.getFunction("createAgent"),
         to: createAddress(AGENT_REGISTRY_ADDRESS),
         from: createAddress(NETHERMIND_DEPLOYER_ADDRESS),
         arguments: [mockAgentId, testAddress4, mockMetadata, mockChainIds],
       })
       .addTraces({
-        function: iface.getFunction("createAgent"),
+        function: testIFace.getFunction("createAgent"),
         to: createAddress(AGENT_REGISTRY_ADDRESS),
         from: createAddress(NETHERMIND_DEPLOYER_ADDRESS),
         arguments: [mockAgentId, testAddress5, mockMetadata, mockChainIds],
@@ -314,13 +314,13 @@ describe("handleTransaction", () => {
       .setFrom(createAddress(NETHERMIND_DEPLOYER_ADDRESS))
       .setTo(createAddress(AGENT_REGISTRY_ADDRESS))
       .addTraces({
-        function: iface.getFunction("updateAgent"),
+        function: testIFace.getFunction("updateAgent"),
         to: createAddress(AGENT_REGISTRY_ADDRESS),
         from: createAddress(NETHERMIND_DEPLOYER_ADDRESS),
         arguments: [mockAgentId, mockMetadata, mockChainIds],
       })
       .addTraces({
-        function: iface.getFunction("updateAgent"),
+        function: testIFace.getFunction("updateAgent"),
         to: createAddress(AGENT_REGISTRY_ADDRESS),
         from: createAddress(NETHERMIND_DEPLOYER_ADDRESS),
         arguments: [mockAgentId, mockMetadata, mockChainIds],
@@ -366,13 +366,13 @@ describe("handleTransaction", () => {
       .setFrom(createAddress(NETHERMIND_DEPLOYER_ADDRESS))
       .setTo(createAddress(AGENT_REGISTRY_ADDRESS))
       .addTraces({
-        function: iface.getFunction("disableAgent"),
+        function: testIFace.getFunction("disableAgent"),
         to: createAddress(AGENT_REGISTRY_ADDRESS),
         from: createAddress(NETHERMIND_DEPLOYER_ADDRESS),
         arguments: [mockAgentId, 1],
       })
       .addTraces({
-        function: iface.getFunction("disableAgent"),
+        function: testIFace.getFunction("disableAgent"),
         to: createAddress(AGENT_REGISTRY_ADDRESS),
         from: createAddress(NETHERMIND_DEPLOYER_ADDRESS),
         arguments: [mockAgentId, 1],
@@ -416,19 +416,19 @@ describe("handleTransaction", () => {
       .setFrom(createAddress(NETHERMIND_DEPLOYER_ADDRESS))
       .setTo(createAddress(AGENT_REGISTRY_ADDRESS))
       .addTraces({
-        function: iface.getFunction("createAgent"),
+        function: testIFace.getFunction("createAgent"),
         to: createAddress(AGENT_REGISTRY_ADDRESS),
         from: createAddress(NETHERMIND_DEPLOYER_ADDRESS),
         arguments: [mockAgentId, testAddress4, mockMetadata, mockChainIds],
       })
       .addTraces({
-        function: iface.getFunction("updateAgent"),
+        function: testIFace.getFunction("updateAgent"),
         to: createAddress(AGENT_REGISTRY_ADDRESS),
         from: createAddress(NETHERMIND_DEPLOYER_ADDRESS),
         arguments: [mockAgentId, mockMetadata, mockChainIds],
       })
       .addTraces({
-        function: iface.getFunction("disableAgent"),
+        function: testIFace.getFunction("disableAgent"),
         to: createAddress(AGENT_REGISTRY_ADDRESS),
         from: createAddress(NETHERMIND_DEPLOYER_ADDRESS),
         arguments: [mockAgentId, 1],
@@ -493,13 +493,13 @@ describe("handleTransaction", () => {
       .setFrom(createAddress(NETHERMIND_DEPLOYER_ADDRESS))
       .setTo(createAddress(AGENT_REGISTRY_ADDRESS))
       .addTraces({
-        function: iface.getFunction("createAgent"),
+        function: testIFace.getFunction("createAgent"),
         to: createAddress(AGENT_REGISTRY_ADDRESS),
         from: createAddress(NETHERMIND_DEPLOYER_ADDRESS),
         arguments: [mockAgentId, testAddress4, mockMetadata, mockChainIds],
       })
       .addTraces({
-        function: iface.getFunction("updateAgent"),
+        function: testIFace.getFunction("updateAgent"),
         to: createAddress(AGENT_REGISTRY_ADDRESS),
         from: createAddress(NETHERMIND_DEPLOYER_ADDRESS),
         arguments: [mockAgentId, mockMetadata, mockChainIds],

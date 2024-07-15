@@ -7,29 +7,22 @@ import {
   CREATE_AGENT_ABI,
   UPDATE_AGENT_ABI,
   DISABLE_AGENT_ABI,
+  AGENT_DEPLOYMENT_FUNCTIONS
 } from "./constants";
 
 const provideHandleTransaction = (
   deployerAddress: string,
   agentRegistryAddress: string,
-  createAgentAbi: string,
-  updateAgentAbi: string,
-  disableAgentAbi: string
 ): HandleTransaction => {
-  const iface = new ethers.utils.Interface([
-    createAgentAbi,
-    updateAgentAbi,
-    disableAgentAbi
-  ]);
 
   return async (txEvent: TransactionEvent) => {
     const findings: Finding[] = [];
 
     if (txEvent.from !== deployerAddress.toLowerCase()) return findings;
 
-    // filter by relevant events
+    // filter by relevant calls
     const agentDeploymentCalls = txEvent.filterFunction(
-      [createAgentAbi, updateAgentAbi, disableAgentAbi],
+      AGENT_DEPLOYMENT_FUNCTIONS,
       agentRegistryAddress
     );
 
@@ -46,9 +39,6 @@ const provideHandleTransaction = (
 export default {
   handleTransaction: provideHandleTransaction(
     NETHERMIND_DEPLOYER_ADDRESS,
-    AGENT_REGISTRY_ADDRESS,
-    CREATE_AGENT_ABI,
-    UPDATE_AGENT_ABI,
-    DISABLE_AGENT_ABI
+    AGENT_REGISTRY_ADDRESS
   ),
 };

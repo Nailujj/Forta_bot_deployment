@@ -27,7 +27,7 @@ export const createFinding = (
       metadata: args[1],
       chainIds: args[2].join(", "),
     };
-  } else if (callSignature.includes("disable")) {
+  } else {
     name = "DISABLE Agent Detected";
     description = "DISABLE function called by Nethermind's deployer address";
     alertId = "NETHERMIND-3";
@@ -35,8 +35,6 @@ export const createFinding = (
       agentId: args[0].toString(),
       reason: args[1].toString(),
     };
-  } else {
-    return null;  // Ignorieren Sie unbekannte Events
   }
 
   return Finding.fromObject({

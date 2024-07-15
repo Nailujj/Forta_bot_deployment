@@ -13,7 +13,7 @@ This Forta bot monitors specific function calls made by the known Nethermind Dep
 ## Alerts
 
 ### FORTA-CREATE
-- **Description**: Fired when a transaction contains a Create Agent function call by the deployer address.
+- **Description**: Fired when a transaction contains a `createAgent` function call by the deployer address.
 - **Severity**: Low.
 - **Type**: "info".
 - **Metadata**:
@@ -23,7 +23,7 @@ This Forta bot monitors specific function calls made by the known Nethermind Dep
   - `data`: The input data of the transaction.
 
 ### FORTA-UPDATE
-- **Description**: Fired when a transaction contains an Update Agent function call by the deployer address.
+- **Description**: Fired when a transaction contains an `updateAgent` function call by the deployer address.
 - **Severity**: Low.
 - **Type**: "info".
 - **Metadata**:
@@ -33,7 +33,7 @@ This Forta bot monitors specific function calls made by the known Nethermind Dep
   - `data`: The input data of the transaction.
 
 ### FORTA-DISABLE
-- **Description**: Fired when a transaction contains a Disable Agent function call by the deployer address.
+- **Description**: Fired when a transaction contains a `disableAgent` function call by the deployer address.
 - **Severity**: Low.
 - **Type**: "info".
 - **Metadata**:
